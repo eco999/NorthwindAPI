@@ -1,10 +1,12 @@
 package com.sparta.sleepint.northwindapi.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(name = "suppliers")
-public class Supplier {
+public class Supplier implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SupplierID", nullable = false)
@@ -43,6 +45,9 @@ public class Supplier {
     @Lob
     @Column(name = "HomePage")
     private String homePage;
+
+    @OneToMany(targetEntity = Product.class, mappedBy = "id",orphanRemoval = false,fetch = FetchType.LAZY)
+    private Set<Product> products;
 
     public Integer getId() {
         return id;
