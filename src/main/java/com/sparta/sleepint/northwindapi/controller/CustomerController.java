@@ -1,6 +1,8 @@
 package com.sparta.sleepint.northwindapi.controller;
 
 import com.sparta.sleepint.northwindapi.entity.Customer;
+import com.sparta.sleepint.northwindapi.exceptions.ControllerExceptionHandler;
+import com.sparta.sleepint.northwindapi.exceptions.ResourceException;
 import com.sparta.sleepint.northwindapi.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,25 +24,46 @@ public class CustomerController {
 
     // Search CustomerS by Name
     @GetMapping("/")
-    public ResponseEntity<List<Customer>> getByName(@RequestParam String name) {
+    public ResponseEntity<String> getByName(@RequestParam String name) {
 
         List<Customer> results = customerRepository.findCustomersByContactNameContainingIgnoreCase(name);
 
-        HttpStatus status = results.size() == 0 ? HttpStatus.NOT_FOUND : HttpStatus.OK;
+        ResponseEntity<String> response;
 
-        return new ResponseEntity<>(results, status);
+        try {
+            if (results.size() == 0) {
+                throw new ResourceException(HttpStatus.NOT_FOUND, "We were unable to find any matches containing this name.");
+            }
+            response = new ResponseEntity<>(results.toString(), HttpStatus.OK);
+            // TODO Change this implementation to return the results mapped into a String
 
+        } catch(ResourceException e) {
+            response = ControllerExceptionHandler.handleException(e);
+        }
+
+        return response;
     }
 
     // Find Customer by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Customer> getByID(@PathVariable String id) {
+    public ResponseEntity<String> getByID(@PathVariable String id) {
 
         Customer result = customerRepository.findCustomerById(id);
 
-        HttpStatus status = result == null ? HttpStatus.NOT_FOUND : HttpStatus.OK;
+        ResponseEntity<String> response;
 
-        return new ResponseEntity<>(result, status);
+        try {
+            if (result == null) {
+                throw new ResourceException(HttpStatus.NOT_FOUND, "We were unable to find any records with this ID.");
+            }
+            response = new ResponseEntity<>(result.toString(), HttpStatus.OK);
+            // TODO Change this implementation to return the results mapped into a String
+
+        } catch(ResourceException e) {
+            response = ControllerExceptionHandler.handleException(e);
+        }
+
+        return response;
 
     }
 }
