@@ -20,7 +20,7 @@ public class CustomerController {
         this.customerRepository = customerRepository;
     }
 
-    // Search Customer by Name
+    // Search CustomerS by Name
     @GetMapping("/")
     public ResponseEntity<List<Customer>> getByName(@RequestParam String name) {
 
@@ -36,7 +36,7 @@ public class CustomerController {
     @GetMapping("/{id}")
     public ResponseEntity<Customer> getByID(@PathVariable String id) {
 
-        Customer result = customerRepository.findCustomersById(id);
+        Customer result = customerRepository.findCustomerById(id);
 
         HttpStatus status = result == null ? HttpStatus.NOT_FOUND : HttpStatus.OK;
 
