@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ControllerExceptionHandler {
 
     @ExceptionHandler(ResourceException.class)
-    public ResponseEntity<String> handleException(ResourceException e) {
+    public static ResponseEntity<String> handleException(ResourceException e) {
 
         return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
