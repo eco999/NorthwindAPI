@@ -1,11 +1,15 @@
 package com.sparta.sleepint.northwindapi.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "products")
-public class Product {
+public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ProductID", nullable = false)
@@ -31,6 +35,31 @@ public class Product {
 
     @Column(name = "Discontinued", nullable = false)
     private Boolean discontinued = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SupplierID")
+    @Fetch(FetchMode.JOIN)
+    private Supplier supplierID;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CategoryID")
+    private Category categoryID;
+
+    public Category getCategoryID() {
+        return categoryID;
+    }
+
+    public void setCategoryID(Category categoryID) {
+        this.categoryID = categoryID;
+    }
+
+    public Supplier getSupplierID() {
+        return supplierID;
+    }
+
+    public void setSupplierID(Supplier supplierID) {
+        this.supplierID = supplierID;
+    }
 
     public Integer getId() {
         return id;
