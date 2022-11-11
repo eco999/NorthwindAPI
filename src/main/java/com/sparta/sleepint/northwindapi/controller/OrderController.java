@@ -1,6 +1,11 @@
 package com.sparta.sleepint.northwindapi.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sparta.sleepint.northwindapi.entity.Order;
+import com.sparta.sleepint.northwindapi.exceptions.ControllerExceptionHandler;
+import com.sparta.sleepint.northwindapi.exceptions.ResourceException;
 import com.sparta.sleepint.northwindapi.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,11 +29,11 @@ public class OrderController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Order>> getOrdersWithinDateRange( String startDate,  String endDate) {
+    public ResponseEntity<List<Order>> getOrdersWithinDateRange(String startDate, String endDate) {
         // Specify the required date format that will be used to parse the date
         SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date sDate = null;
-        Date eDate = null;
+        Date sDate;
+        Date eDate;
         try {
             sDate = dateFormatter.parse(startDate); // throws ParseException
             eDate = dateFormatter.parse(endDate); // throws ParseException
@@ -37,22 +42,22 @@ public class OrderController {
         }
         Date finalSDate = sDate;
         Date finalEDate = eDate;
-        System.out.println(startDate);
-        System.out.println(endDate);
         List<Order> orders = orderRepository.findAll()
                 .stream()
                 .filter(order -> order.getOrderDate().isAfter(finalSDate.toInstant()) && order.getOrderDate().isBefore(finalEDate.toInstant()))
                 .toList();
 
-        HttpStatus status = orders.size() == 0 ? HttpStatus.NOT_FOUND : HttpStatus.OK;
-        return new ResponseEntity<>(orders, status);
+        HttpStatus status = HttpStatus.OK;
+        return new ResponseEntity<>(orders,status);
     }
 
     @GetMapping("/all/range")
-    public ResponseEntity<List<Order>> getOrdersWithinDateRange( String date,  boolean isStartDate) {
+    public ResponseEntity<List<Order>> getOrdersWithinDateRange(String date, boolean isStartDate) {
         // Specify the required date format that will be used to parse the date
+        System.out.println(isStartDate);
+        if(isStartDate) System.out.println("true");
         SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date inputDate = null;
+        Date inputDate;
         try {
             inputDate = dateFormatter.parse(date); // throws ParseException
         } catch (ParseException e) {
@@ -61,7 +66,7 @@ public class OrderController {
         Date finalDate = inputDate;
 
 
-        List<Order> orders = null;
+        List<Order> orders;
         if (isStartDate) {
             orders = orderRepository.findAll()
                     .stream()
