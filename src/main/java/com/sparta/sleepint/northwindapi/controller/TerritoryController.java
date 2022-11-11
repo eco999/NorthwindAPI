@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Set;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
@@ -21,14 +24,20 @@ public class TerritoryController {
     public TerritoryController(TerritoryRepository territoryRepository) {
         this.territoryRepository = territoryRepository;
     }
+    @GetMapping("/territory/employees/{territoryId}")
+    public Set<Employee> getEmployeesByTerritoryId(@PathVariable String territoryId){
+        Set<Employee> employeeSet = territoryRepository.findById(territoryId).get().getEmployees();
+
+        return employeeSet;
+    }
 
     @GetMapping("/territory/{territoryId}")
     public EntityModel<Territory> getTerritoryById(@PathVariable String territoryId) {
         Territory territory = territoryRepository.findById(territoryId).get();
         EntityModel <Territory> entityModel = EntityModel.of(territory);
         //Connect employees to territory
-        WebMvcLinkBuilder webMvcLinkBuilder = WebMvcLinkBuilder.linkTo(EmployeeTerritoryController.getEmployeesByTerritory(Integer.parseInt(territoryId)));
-        entityModel.add(webMvcLinkBuilder.withRel("employee"));
+        WebMvcLinkBuilder webMvcLinkBuilder = WebMvcLinkBuilder.linkTo(methodOn(this.getClass()).getEmployeesByTerritoryId(territoryId));
+        entityModel.add(webMvcLinkBuilder.withRel("employees"));
         return entityModel;
     }
 }
