@@ -3,6 +3,7 @@ package com.sparta.sleepint.northwindapi.controller;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.sparta.sleepint.northwindapi.entity.Product;
@@ -38,8 +39,10 @@ public class ProductPriceController {
             Product product = productRepository.findById(id).get();
             product.setUnitPrice(unitPrice);
             productRepository.save(product);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
             try {
-                return writeResult(new ObjectMapper().writeValueAsString(product));
+                return writeResult(objectMapper.writeValueAsString(product));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
