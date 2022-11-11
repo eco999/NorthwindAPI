@@ -22,5 +22,4 @@ public class NorthwindController {
         this.supplierRepository = supplierRepository;
         this.territoryRepository = territoryRepository;
     }
-
 }
