@@ -59,19 +59,4 @@ public class ProductController {
 
     }
 
-    @GetMapping("/supplier/{id}")
-    public Supplier getSupplierByID(@PathVariable int id){
-        Supplier supplier = supplierRepository.findById(id).orElse(null);
-
-        return supplier;
-    }
-
-    @GetMapping("/category/{id}")
-    public Category getCategoryByID(@PathVariable int id){
-        Category category = categoryRepository.findById(id).orElse(null);
-
-        return category;
-    }
-
-
 }
