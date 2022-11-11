@@ -3,6 +3,7 @@ package com.sparta.sleepint.northwindapi.dto;
 import java.math.BigDecimal;
 
 public class SuppProdDTO {
+    private String categoryName;
     private String prodSupplierName;
     private int productID;
     private String productName;
@@ -13,7 +14,8 @@ public class SuppProdDTO {
     private short productReorderLevel;
     private boolean productDiscontinued;
 
-    public SuppProdDTO(String prodSupplierName, int productID, String productName, String productQuantityPerUnit, BigDecimal productUnitPrice, short productUnitsInStock, short productUnitsOnOrder, short productReorderLevel, boolean productDiscontinued) {
+    public SuppProdDTO(String categoryName, String prodSupplierName, int productID, String productName, String productQuantityPerUnit, BigDecimal productUnitPrice, short productUnitsInStock, short productUnitsOnOrder, short productReorderLevel, boolean productDiscontinued) {
+        this.categoryName = categoryName;
         this.prodSupplierName = prodSupplierName;
         this.productID = productID;
         this.productName = productName;
@@ -25,6 +27,13 @@ public class SuppProdDTO {
         this.productDiscontinued = productDiscontinued;
     }
 
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 
     public String getProdSupplierName() {
         return prodSupplierName;
